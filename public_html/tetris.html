@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+
+            var TETRIS = function () {
+
+                this.contadorPiezas = new Array();
+                this.tablero = new Array();
+                this.estadoTablero = 0;
+                this.puntuacion = 0;
+                this.puntuacionMaxima = 0;
+                this.piezaActual = 0;
+            }
+
+            TETRIS.prototype.iniciarJuego = function () {
+
+                tablero = new Array();
+                for (var i = 0; i < 25; i++) {
+                    tablero[i] = [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2];
+                }
+                contadorPiezas = new Array();
+                contadorPiezas = {"i": 0, "j": 0, "l": 0, "o": 0, "s": 0, "t": 0, "z": 0};
+
+            }
+
+            var r = new TETRIS();
+            console.log(r.iniciarJuego());
+
+            TETRIS.prototype.piezaSiguiente = function () {
+
+            }
+            TETRIS.prototype.teclado = function () {
+
+            }
+            TETRIS.prototype.movimientoAutomatico = function () {
+                this.x++;
+            }
+
+
+            var Pieza = function (forma, color, x, y)
+            {
+                this.forma = forma;
+                this.color = color;
+                this.x = x;
+                this.y = y;
+            };
+
+            Pieza.prototype.moureDreta = function ()
+            {
+                this.y++;
+            };
+            Pieza.prototype.moureEsquerra = function ()
+            {
+                this.y--;
+            };
+            Pieza.prototype.moureAvall = function ()
+            {
+                this.x++;
+            };
+
+            Pieza.prototype.pintar = function ()
+            {
+                var resultat = "<table border='1'>";
+                for (var i = 0; i < this.forma.length; i++)
+                {
+                    resultat = resultat + "<tr>"
+                    for (var j = 0; j < this.forma[i].length; j++)
+                    {
+                        resultat = resultat + "<td>";
+                        if (this.forma[i][j] == 1) {
+                            resultat = resultat + "X"
+                        } else {
+                            resultat = resultat + "-"
+                        }
+                        ;
+                        resultat = resultat + "</td>";
+                    }
+                    resultat = resultat + "</tr>";
+                }
+                resultat = resultat + "</table>";
+                return resultat
+            };
+
+            var pa = GeneraPecaAleatoria();
+            var p = new Pieza(pa[0], pa[1]);
+            //  document.write(p.pintar());
+            //  document.getElementById("original").innerHTML = p.pintar();
+
+
+            function GeneraPecaAleatoria()
+            {
+                var peces = [
+                    [[[0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]], "groc"],
+                    [[[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]], "lila"],
+                    [[[0, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]], "verd"],
+                    [[[0, 0, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [0, 0, 0, 0]], "roig"],
+                    [[[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]], "blau"],
+                    [[[0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]], "taronga"],
+                    [[[0, 0, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]], "morat"]]
+                var numeroAleatori = Math.round(Math.random() * 6);
+                return peces[numeroAleatori];
+            }
+
+             var pa = GeneraPecaAleatoria();
+             var p = new Pieza(pa[0], pa[1]);
+
+            Pieza.prototype.rotarDreta = function () {
+                var formaNova = new Array();
+                for (var i = 0; i < this.forma.length; i++) {
+                    formaNova[i] = new Array();
+                    for (var j = 0; j < this.forma[i].length; j++) {
+                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
+                    }
+                }
+                this.forma = formaNova;
+            }
+            p.rotarDreta();
+
+
+            //  document.getElementById("girada").innerHTML = p.pintar();
+
+            Pieza.prototype.rotarEsquerra = function () {
+                var formaNova = new Array();
+                for (var i = 0; i < this.forma.length; i++) {
+                    formaNova[i] = new Array();
+                    for (var j = 0; j < this.forma[i].length; j++) {
+                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
+                    }
+                }
+                this.forma = formaNova;
+            }
+
+            for (var h = 0; h < 2; h++) {
+                p.rotarEsquerra();
+            }
+
+            //  document.getElementById("girada").innerHTML = p.pintar();
+
+            function reFresh() {
+
+                clearInterval(id);
+
+                document.write(p.pintar());
+
+                for (var i = 0; i < tablero.length; i++) {
+   
+
+                    if (i != 0) {
+                        document.write("<br>");
+                    }
+                    for (var j = 0; j < tablero[i].length; j++) {
+
+                        if (tablero[i][j] == 0) {
+
+                            document.write("X");
+
+                        } else if (tablero[i][j] == 2) {
+                            document.write("Y");
+
+                        }
+                    }
+
+                }
+            }
+            var id = setInterval(reFresh, 1000);
+
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
