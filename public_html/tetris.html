@@ -6,10 +6,25 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>DAVID RODRIGUEZ</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </head>
+    <body>
+        <p id="demo"></p>
+
+
+
+        <!-- Imatges que farem servir en el nostre espai de dibuix, estan ocultades -->
+        <img src="verde.png" id="verde" style="display: none;">
+        <img src="pared.png" id="pared" style="display: none;">
+        <img src="blanco.png" id="blanco" style="display: none;">
+
+        <!-- Espai de dibuix -->
+        <canvas id="espai" width="5000" height="5000"> </canvas>
         <script>
+
+            var ok = true;
 
             var TETRIS = function () {
 
@@ -18,31 +33,60 @@ and open the template in the editor.
                 this.estadoTablero = 0;
                 this.puntuacion = 0;
                 this.puntuacionMaxima = 0;
-                this.piezaActual = 0;
+                this.piezaActual = new Array();
             }
 
             TETRIS.prototype.iniciarJuego = function () {
 
-                tablero = new Array();
-                for (var i = 0; i < 25; i++) {
-                    tablero[i] = [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2];
-                }
-                contadorPiezas = new Array();
-                contadorPiezas = {"i": 0, "j": 0, "l": 0, "o": 0, "s": 0, "t": 0, "z": 0};
+
+                this.tablero = [
+
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                ];
+                this.contadorPiezas = new Array();
+                this.contadorPiezas = {"i": 0, "j": 0, "l": 0, "o": 0, "s": 0, "t": 0, "z": 0};
 
             }
 
             var r = new TETRIS();
-            console.log(r.iniciarJuego());
+            r.iniciarJuego();
 
             TETRIS.prototype.piezaSiguiente = function () {
+
+
 
             }
             TETRIS.prototype.teclado = function () {
 
             }
             TETRIS.prototype.movimientoAutomatico = function () {
-                this.x++;
+                p.x = p.x + 1;
             }
 
 
@@ -56,16 +100,43 @@ and open the template in the editor.
 
             Pieza.prototype.moureDreta = function ()
             {
-                this.y++;
+                p.x = p.x - 1;
             };
             Pieza.prototype.moureEsquerra = function ()
             {
-                this.y--;
+                p.x = p.x + 1;
             };
             Pieza.prototype.moureAvall = function ()
             {
-                this.x++;
+                p.y = p.y + 1;
             };
+            Pieza.prototype.rotarDreta = function () {
+                var formaNova = new Array();
+                for (var i = 0; i < this.forma.length; i++) {
+                    formaNova[i] = new Array();
+                    for (var j = 0; j < this.forma[i].length; j++) {
+                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
+                    }
+                }
+                this.forma = formaNova;
+            }
+
+
+            var pa = GeneraPecaAleatoria();
+            var p = new Pieza(pa[0], pa[1], 0, 4);
+
+
+
+            Pieza.prototype.rotarEsquerra = function () {
+                var formaNova = new Array();
+                for (var i = 0; i < this.forma.length; i++) {
+                    formaNova[i] = new Array();
+                    for (var j = 0; j < this.forma[i].length; j++) {
+                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
+                    }
+                }
+                this.forma = formaNova;
+            }
 
             Pieza.prototype.pintar = function ()
             {
@@ -76,7 +147,7 @@ and open the template in the editor.
                     for (var j = 0; j < this.forma[i].length; j++)
                     {
                         resultat = resultat + "<td>";
-                        if (this.forma[i][j] == 1) {
+                        if (this.forma[i][j] == 2) {
                             resultat = resultat + "X"
                         } else {
                             resultat = resultat + "-"
@@ -90,92 +161,161 @@ and open the template in the editor.
                 return resultat
             };
 
-            var pa = GeneraPecaAleatoria();
-            var p = new Pieza(pa[0], pa[1]);
-            //  document.write(p.pintar());
-            //  document.getElementById("original").innerHTML = p.pintar();
 
+            document.getElementById("demo").innerHTML = p.pintar();
 
             function GeneraPecaAleatoria()
             {
                 var peces = [
-                    [[[0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]], "groc"],
-                    [[[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]], "lila"],
-                    [[[0, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0], [0, 0, 0, 0]], "verd"],
-                    [[[0, 0, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [0, 0, 0, 0]], "roig"],
-                    [[[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]], "blau"],
-                    [[[0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]], "taronga"],
-                    [[[0, 0, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]], "morat"]]
+                    [[[0, 0, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 0, 0]], "groc"],
+
+                    [[[0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0]], "lila"],
+
+                    [[[0, 0, 0, 0],
+                            [0, 2, 2, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0]], "verd"],
+
+                           [[[0, 0, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 2, 2],
+                            [0, 0, 0, 0]], "roig"],
+
+                    [[[0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 0, 0]], "blau"],
+
+                    [[[0, 2, 2, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]], "taronga"],
+
+                          [[[0, 0, 0, 0],
+                            [2, 2, 2, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]], "morat"]]
                 var numeroAleatori = Math.round(Math.random() * 6);
                 return peces[numeroAleatori];
             }
 
-             var pa = GeneraPecaAleatoria();
-             var p = new Pieza(pa[0], pa[1]);
-
-            Pieza.prototype.rotarDreta = function () {
-                var formaNova = new Array();
-                for (var i = 0; i < this.forma.length; i++) {
-                    formaNova[i] = new Array();
-                    for (var j = 0; j < this.forma[i].length; j++) {
-                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
-                    }
-                }
-                this.forma = formaNova;
-            }
-            p.rotarDreta();
-
-
-            //  document.getElementById("girada").innerHTML = p.pintar();
-
-            Pieza.prototype.rotarEsquerra = function () {
-                var formaNova = new Array();
-                for (var i = 0; i < this.forma.length; i++) {
-                    formaNova[i] = new Array();
-                    for (var j = 0; j < this.forma[i].length; j++) {
-                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
-                    }
-                }
-                this.forma = formaNova;
-            }
-
-            for (var h = 0; h < 2; h++) {
-                p.rotarEsquerra();
-            }
-
-            //  document.getElementById("girada").innerHTML = p.pintar();
 
             function reFresh() {
 
-                clearInterval(id);
+                function pintar2() {
 
-                document.write(p.pintar());
+                    var canvas = document.getElementById("espai");
+                    var ctx = canvas.getContext("2d");
+                    ctx.clearRect(0, 0, 5000, 5000);
 
-                for (var i = 0; i < tablero.length; i++) {
-   
+                    var img;
 
-                    if (i != 0) {
-                        document.write("<br>");
+
+                    for (var i = 0; i < r.tablero.length; i++) {
+                        for (var j = 0; j < r.tablero[i].length; j++) {
+
+                            if (r.tablero[i][j] == 1) {
+
+                                img = document.getElementById("pared");
+                            } else
+                            {
+                                if (r.tablero[i][j] == 0) {
+                                    img = document.getElementById("blanco");
+                                }
+
+
+                                for (var m = 0; m < p.forma.length; m++) {
+                                    for (var n = 0; n < p.forma[m].length; n++) {
+                                        if (p.x + m == i && p.y + n == j && p.forma[m][n] == 2) {
+
+                                            img = document.getElementById("verde");
+
+                                        }
+
+                                    }
+                                }
+
+                            }
+                            ctx.drawImage(img, j * 20, i * 20, 20, 20);
+                        }
                     }
-                    for (var j = 0; j < tablero[i].length; j++) {
+                }
 
-                        if (tablero[i][j] == 0) {
+                pintar2();
+                colisionPiezas();
 
-                            document.write("X");
+                function colisionPiezas() {
 
-                        } else if (tablero[i][j] == 2) {
-                            document.write("Y");
+                    if (p.color == "groc" || p.color == "verd" || p.color == "groc" || p.color == "blau" || p.color == "taronga" || p.color == "morat") {
+                        var ok = false;
 
+
+                        if (r.tablero[p.x][p.y + 1] == 0 && r.tablero[p.x + 1][p.y + 1] == 0 && r.tablero[p.x + 2][p.y + 1] == 0 && r.tablero[p.x + 3][p.y + 1] == 0 && r.tablero[p.x + 4][p.y + 1] == 0) {
+                            ok = true;
+                            if (r.tablero[p.x][p.y + 2] == 0 && r.tablero[p.x + 1][p.y + 2] == 0 && r.tablero[p.x + 2][p.y + 2] == 0 && r.tablero[p.x + 3][p.y + 2] == 0 && r.tablero[p.x + 4][p.y + 2] == 0 && ok == true) {
+                                ok = true;
+
+                                if (r.tablero[p.x][p.y + 3] == 0 && r.tablero[p.x + 1][p.y + 3] == 0 && r.tablero[p.x + 2][p.y + 3] == 0 && r.tablero[p.x + 3][p.y + 3] == 0 && r.tablero[p.x + 4][p.y + 3] == 0 && ok == true) {
+                                    ok = true;
+                                } else {
+                                    ok = false
+                                }
+                            } else {
+                                ok = false
+                            }
+                        } else {
+                            ok = false
                         }
                     }
 
+                    if (p.color == "lila") {
+                        var ok = false;
+
+                        if (r.tablero[p.x][p.y + 1] == 0 && r.tablero[p.x + 2][p.y + 4] == 0) {
+                            ok = true;
+                            if (r.tablero[p.x][p.y + 2] == 0 && ok == true) {
+                                ok = true;
+
+                            } else {
+                                ok = false
+                            }
+                        } else {
+                            ok = false
+                        }
+                    }
+
+                    if (p.color == "roig") {
+                        var ok = false;
+
+                        if (r.tablero[p.x][p.y + 1] == 0) {
+                            ok = true;
+                            if (r.tablero[p.x][p.y + 4] == 0 && ok == true) {
+                                ok = true;
+
+                            } else {
+                                ok = false
+                            }
+                        } else {
+                            ok = false
+                        }
+                    }
+
+
+                    if (ok == true) {
+                        r.movimientoAutomatico();
+                    }
                 }
             }
-            var id = setInterval(reFresh, 1000);
+
+            var id = setInterval(reFresh, 100);
 
         </script>
-    </head>
-    <body>
 
     </body>
 </html>
