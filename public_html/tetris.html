@@ -13,15 +13,20 @@ and open the template in the editor.
     <body>
         <p id="demo"></p>
 
-
-
         <!-- Imatges que farem servir en el nostre espai de dibuix, estan ocultades -->
-        <img src="verde.png" id="verde" style="display: none;">
+
         <img src="pared.png" id="pared" style="display: none;">
-        <img src="blanco.png" id="blanco" style="display: none;">
+        <img src="fondo.png" id="fondo" style="display: none;">
+        <img src="amarillo.png" id="amarillo" style="display: none;">
+        <img src="gris.png" id="gris" style="display: none;">
+        <img src="lila.png" id="lila" style="display: none;">
+        <img src="naranja.png" id="naranja" style="display: none;">
+        <img src="rosa.png" id="rosa" style="display: none;">
+        <img src="verde.png" id="verde" style="display: none;">
+        <img src="azul.png" id="azul" style="display: none;">
 
         <!-- Espai de dibuix -->
-        <canvas id="espai" width="5000" height="5000"> </canvas>
+        <canvas id="espai" width="6000" height="6000"> </canvas>
         <script>
 
             var ok = true;
@@ -33,7 +38,8 @@ and open the template in the editor.
                 this.estadoTablero = 0;
                 this.puntuacion = 0;
                 this.puntuacionMaxima = 0;
-                this.piezaActual = new Array();
+                this.piezaActual = 0;
+                this.piezaS = 0;          
             }
 
             TETRIS.prototype.iniciarJuego = function () {
@@ -79,7 +85,9 @@ and open the template in the editor.
 
             TETRIS.prototype.piezaSiguiente = function () {
 
-
+                var pa = GeneraPecaAleatoria();
+                var a = new Pieza(pa[0], pa[1], 0, 4);
+                return a;
 
             }
             TETRIS.prototype.teclado = function () {
@@ -100,15 +108,15 @@ and open the template in the editor.
 
             Pieza.prototype.moureDreta = function ()
             {
-                p.x = p.x - 1;
+                p.y = p.y + 1;
             };
             Pieza.prototype.moureEsquerra = function ()
             {
-                p.x = p.x + 1;
+                p.y = p.y - 1;
             };
             Pieza.prototype.moureAvall = function ()
             {
-                p.y = p.y + 1;
+                p.x = p.x + 1;
             };
             Pieza.prototype.rotarDreta = function () {
                 var formaNova = new Array();
@@ -122,20 +130,10 @@ and open the template in the editor.
             }
 
 
-            var pa = GeneraPecaAleatoria();
-            var p = new Pieza(pa[0], pa[1], 0, 4);
-
-
-
             Pieza.prototype.rotarEsquerra = function () {
-                var formaNova = new Array();
-                for (var i = 0; i < this.forma.length; i++) {
-                    formaNova[i] = new Array();
-                    for (var j = 0; j < this.forma[i].length; j++) {
-                        formaNova[i][j] = this.forma[this.forma[i].length - 1 - j][i];
-                    }
-                }
-                this.forma = formaNova;
+                p.rotarDreta();
+                p.rotarDreta();
+                p.rotarDreta();
             }
 
             Pieza.prototype.pintar = function ()
@@ -162,60 +160,74 @@ and open the template in the editor.
             };
 
 
-            document.getElementById("demo").innerHTML = p.pintar();
-
             function GeneraPecaAleatoria()
             {
                 var peces = [
-                    [[[0, 0, 0, 0],
+                           [[[0, 0, 0, 0],
                             [0, 2, 2, 0],
                             [0, 2, 2, 0],
-                            [0, 0, 0, 0]], "groc"],
+                            [0, 0, 0, 0]], "amarillo"],
 
-                    [[[0, 2, 0, 0],
+                          [[[0, 2, 0, 0],
                             [0, 2, 0, 0],
                             [0, 2, 0, 0],
                             [0, 2, 0, 0]], "lila"],
 
-                    [[[0, 0, 0, 0],
-                            [0, 2, 2, 0],
+                          [[[0, 2, 2, 0],
                             [2, 2, 0, 0],
-                            [0, 0, 0, 0]], "verd"],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]], "verde"],
+
+                            [[[2, 2, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]], "naranja"],
+
+                          [[[0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 0, 0]], "azul"],
+
+                          [[[0, 2, 2, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]], "rosa"],
 
                            [[[0, 0, 0, 0],
-                            [0, 2, 2, 0],
-                            [0, 0, 2, 2],
-                            [0, 0, 0, 0]], "roig"],
-
-                    [[[0, 2, 0, 0],
-                            [0, 2, 0, 0],
-                            [0, 2, 2, 0],
-                            [0, 0, 0, 0]], "blau"],
-
-                    [[[0, 2, 2, 0],
-                            [0, 2, 0, 0],
-                            [0, 2, 0, 0],
-                            [0, 0, 0, 0]], "taronga"],
-
-                          [[[0, 0, 0, 0],
                             [2, 2, 2, 0],
                             [0, 2, 0, 0],
-                            [0, 0, 0, 0]], "morat"]]
+                            [0, 0, 0, 0]], "gris"]]
                 var numeroAleatori = Math.round(Math.random() * 6);
                 return peces[numeroAleatori];
             }
 
+            this.piezaS = r.piezaSiguiente();
+
+            var pa = GeneraPecaAleatoria();
+            p = new Pieza(pa[0], pa[1], 0, 4);
+            this.piezaActual = p;
+
+            var c = false;
 
             function reFresh() {
+
+                if (c == false) {
+
+                    document.getElementById("demo").innerHTML = this.piezaS.pintar();
+                    
+                } else {
+                    p = this.piezaS;
+                    this.piezaS = r.piezaSiguiente();
+                    c = false;
+                }
 
                 function pintar2() {
 
                     var canvas = document.getElementById("espai");
                     var ctx = canvas.getContext("2d");
-                    ctx.clearRect(0, 0, 5000, 5000);
+                    ctx.clearRect(0, 0, 6000, 6000);
 
                     var img;
-
 
                     for (var i = 0; i < r.tablero.length; i++) {
                         for (var j = 0; j < r.tablero[i].length; j++) {
@@ -226,15 +238,47 @@ and open the template in the editor.
                             } else
                             {
                                 if (r.tablero[i][j] == 0) {
-                                    img = document.getElementById("blanco");
+                                    img = document.getElementById("fondo");
                                 }
+                                if (r.tablero[i][j] == 2) {
 
+                                    if (p.color == "verde" ) {
+                                        img = document.getElementById("verde");
+                                    } else if (p.color == "lila") {
+                                        img = document.getElementById("lila");
+                                    } else if (p.color == "naranja") {
+                                        img = document.getElementById("naranja");
+                                    } else if (p.color == "gris") {
+                                        img = document.getElementById("gris");
+                                    } else if (p.color == "azul") {
+                                        img = document.getElementById("azul");
+                                    } else if (p.color == "amarillo") {
+                                        img = document.getElementById("amarillo");
+                                    } else if (p.color == "rosa") {
+                                        img = document.getElementById("rosa");
+                                    }
+
+                                }
 
                                 for (var m = 0; m < p.forma.length; m++) {
                                     for (var n = 0; n < p.forma[m].length; n++) {
                                         if (p.x + m == i && p.y + n == j && p.forma[m][n] == 2) {
 
-                                            img = document.getElementById("verde");
+                                            if (p.color == "verde") {
+                                                img = document.getElementById("verde");
+                                            } else if (p.color == "lila") {
+                                                img = document.getElementById("lila");
+                                            } else if (p.color == "naranja") {
+                                                img = document.getElementById("naranja");
+                                            } else if (p.color == "gris") {
+                                                img = document.getElementById("gris");
+                                            } else if (p.color == "azul") {
+                                                img = document.getElementById("azul");
+                                            } else if (p.color == "amarillo") {
+                                                img = document.getElementById("amarillo");
+                                            } else if (p.color == "rosa") {
+                                                img = document.getElementById("rosa");
+                                            }
 
                                         }
 
@@ -242,78 +286,105 @@ and open the template in the editor.
                                 }
 
                             }
-                            ctx.drawImage(img, j * 20, i * 20, 20, 20);
+                            ctx.drawImage(img, j * 22, i * 22, 22, 22);
                         }
                     }
                 }
+
 
                 pintar2();
                 colisionPiezas();
 
                 function colisionPiezas() {
 
-                    if (p.color == "groc" || p.color == "verd" || p.color == "groc" || p.color == "blau" || p.color == "taronga" || p.color == "morat") {
-                        var ok = false;
+                    var ok = true;
+                    var ok2 = true;
+                    var ok3 = true;
+                    var ok4 = true;
 
+                    for (var m = 0; m < p.forma.length; m++) {
+                        for (var n = 0; n < p.forma[m].length; n++) {
 
-                        if (r.tablero[p.x][p.y + 1] == 0 && r.tablero[p.x + 1][p.y + 1] == 0 && r.tablero[p.x + 2][p.y + 1] == 0 && r.tablero[p.x + 3][p.y + 1] == 0 && r.tablero[p.x + 4][p.y + 1] == 0) {
-                            ok = true;
-                            if (r.tablero[p.x][p.y + 2] == 0 && r.tablero[p.x + 1][p.y + 2] == 0 && r.tablero[p.x + 2][p.y + 2] == 0 && r.tablero[p.x + 3][p.y + 2] == 0 && r.tablero[p.x + 4][p.y + 2] == 0 && ok == true) {
-                                ok = true;
+                            if (p.forma[m][n] == 2) {
 
-                                if (r.tablero[p.x][p.y + 3] == 0 && r.tablero[p.x + 1][p.y + 3] == 0 && r.tablero[p.x + 2][p.y + 3] == 0 && r.tablero[p.x + 3][p.y + 3] == 0 && r.tablero[p.x + 4][p.y + 3] == 0 && ok == true) {
+                                if (r.tablero[p.x + m + 1][p.y + n] == 0) {
+
                                     ok = true;
+
                                 } else {
-                                    ok = false
+                                    ok = false;
+
                                 }
-                            } else {
-                                ok = false
+
+                                if (p.forma[m][n - 1] == 2) {
+
+                                    if (ok == true) {
+                                        if (r.tablero[p.x + m + 1][p.y + n - 1] == 0) {
+                                            ok2 = true;
+
+                                        } else {
+                                            ok2 = false;
+                                        }
+                                    }
+
+                                    if (p.forma[m][n - 2] == 2) {
+
+                                        if (ok2 == true) {
+                                            if (r.tablero[p.x + m + 1][p.y + n - 2] == 0) {
+                                                ok3 = true;
+
+                                            } else {
+                                                ok3 = false;
+                                            }
+                                        }
+
+                                        if (p.forma[m][n - 3] == 2) {
+
+                                            if (ok3 == true) {
+                                                if (r.tablero[p.x + m + 1][p.y + n - 3] == 0) {
+                                                    ok4 = true;
+
+                                                } else {
+                                                    ok4 = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        } else {
-                            ok = false
                         }
                     }
 
-                    if (p.color == "lila") {
-                        var ok = false;
-
-                        if (r.tablero[p.x][p.y + 1] == 0 && r.tablero[p.x + 2][p.y + 4] == 0) {
-                            ok = true;
-                            if (r.tablero[p.x][p.y + 2] == 0 && ok == true) {
-                                ok = true;
-
-                            } else {
-                                ok = false
-                            }
-                        } else {
-                            ok = false
-                        }
-                    }
-
-                    if (p.color == "roig") {
-                        var ok = false;
-
-                        if (r.tablero[p.x][p.y + 1] == 0) {
-                            ok = true;
-                            if (r.tablero[p.x][p.y + 4] == 0 && ok == true) {
-                                ok = true;
-
-                            } else {
-                                ok = false
-                            }
-                        } else {
-                            ok = false
-                        }
-                    }
-
-
-                    if (ok == true) {
+                    if (ok == true && ok2 == true && ok3 == true && ok4 == true) {
                         r.movimientoAutomatico();
+                    } else {
+                        c = true;
+                        imprimirPiezasFinalizadas();
                     }
                 }
+
+                function imprimirPiezasFinalizadas() {
+
+                    for (var m = 0; m < p.forma.length; m++) {
+                        for (var n = 0; n < p.forma[m].length; n++) {
+
+                            if (p.forma[m][n] == 2) {
+
+                                r.tablero[p.x + m][p.y + n] = p.forma[m][n];
+
+
+                            }
+                        }
+                    }
+                  
+                }
+
             }
 
+
             var id = setInterval(reFresh, 100);
+
+
 
         </script>
 
