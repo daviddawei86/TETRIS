@@ -12,6 +12,7 @@ and open the template in the editor.
     </head>
     <body>
         <p id="demo"></p>
+        <p id="puntuacion"></p>
 
         <!-- Imatges que farem servir en el nostre espai de dibuix, estan ocultades -->
 
@@ -27,6 +28,7 @@ and open the template in the editor.
 
         <!-- Espai de dibuix -->
         <canvas id="espai" width="6000" height="6000"> </canvas>
+        <canvas id="espai2" width="1000" height="1000"> </canvas>
         <script>
 
             var ok = true;
@@ -39,14 +41,16 @@ and open the template in the editor.
                 this.puntuacion = 0;
                 this.puntuacionMaxima = 0;
                 this.piezaActual = 0;
-                this.piezaS = 0;          
+                this.nivel;
+                this.piezasTotales = 0;
+
             }
 
             TETRIS.prototype.iniciarJuego = function () {
 
 
                 this.tablero = [
-
+                    [1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -78,6 +82,9 @@ and open the template in the editor.
                 this.contadorPiezas = new Array();
                 this.contadorPiezas = {"i": 0, "j": 0, "l": 0, "o": 0, "s": 0, "t": 0, "z": 0};
 
+                this.piezasTotales = 0;
+                this.nivel = 0;
+
             }
 
             var r = new TETRIS();
@@ -86,7 +93,7 @@ and open the template in the editor.
             TETRIS.prototype.piezaSiguiente = function () {
 
                 var pa = GeneraPecaAleatoria();
-                var a = new Pieza(pa[0], pa[1], 0, 4);
+                var a = new Pieza(pa[0], pa[1], 2, 4);
                 return a;
 
             }
@@ -94,9 +101,16 @@ and open the template in the editor.
 
             }
             TETRIS.prototype.movimientoAutomatico = function () {
-                p.x = p.x + 1;
+                p.x++;
             }
+            TETRIS.prototype.finalizarPartida = function () {
+                if (r.tablero[p.x - 2][p.y] == 3) {
 
+                    r.puntuacionMaxima = document.cookie;
+                    alert("GAMER OVER");
+                    clearInterval(id);
+                }
+            }
 
             var Pieza = function (forma, color, x, y)
             {
@@ -108,15 +122,28 @@ and open the template in the editor.
 
             Pieza.prototype.moureDreta = function ()
             {
-                p.y = p.y + 1;
+
+                if (r.tablero[p.x][p.y + 4] == 0) {
+                    p.y++;
+                }
+
             };
             Pieza.prototype.moureEsquerra = function ()
             {
-                p.y = p.y - 1;
+
+                if (r.tablero[p.x][p.y - 1] == 0) {
+                    p.y--;
+
+                }
+
             };
             Pieza.prototype.moureAvall = function ()
             {
-                p.x = p.x + 1;
+                if (r.tablero[p.x + 4][p.y] != 2) {
+                    p.x++;
+                    r.puntuacion += 1;
+                }
+
             };
             Pieza.prototype.rotarDreta = function () {
                 var formaNova = new Array();
@@ -138,6 +165,7 @@ and open the template in the editor.
 
             Pieza.prototype.pintar = function ()
             {
+
                 var resultat = "<table border='1'>";
                 for (var i = 0; i < this.forma.length; i++)
                 {
@@ -163,37 +191,37 @@ and open the template in the editor.
             function GeneraPecaAleatoria()
             {
                 var peces = [
-                           [[[0, 0, 0, 0],
+                    [[[0, 0, 0, 0],
                             [0, 2, 2, 0],
                             [0, 2, 2, 0],
                             [0, 0, 0, 0]], "amarillo"],
 
-                          [[[0, 2, 0, 0],
+                    [[[0, 2, 0, 0],
                             [0, 2, 0, 0],
                             [0, 2, 0, 0],
                             [0, 2, 0, 0]], "lila"],
 
-                          [[[0, 2, 2, 0],
+                    [[[0, 2, 2, 0],
                             [2, 2, 0, 0],
                             [0, 0, 0, 0],
                             [0, 0, 0, 0]], "verde"],
 
-                            [[[2, 2, 0, 0],
+                    [[[2, 2, 0, 0],
                             [0, 2, 2, 0],
                             [0, 0, 0, 0],
                             [0, 0, 0, 0]], "naranja"],
 
-                          [[[0, 2, 0, 0],
+                    [[[0, 2, 0, 0],
                             [0, 2, 0, 0],
                             [0, 2, 2, 0],
                             [0, 0, 0, 0]], "azul"],
 
-                          [[[0, 2, 2, 0],
+                    [[[0, 2, 2, 0],
                             [0, 2, 0, 0],
                             [0, 2, 0, 0],
                             [0, 0, 0, 0]], "rosa"],
 
-                           [[[0, 0, 0, 0],
+                    [[[0, 0, 0, 0],
                             [2, 2, 2, 0],
                             [0, 2, 0, 0],
                             [0, 0, 0, 0]], "gris"]]
@@ -201,25 +229,58 @@ and open the template in the editor.
                 return peces[numeroAleatori];
             }
 
+            document.addEventListener("keydown", keyDownTextField, false);
+            function keyDownTextField(e) {
+                var keyCode = e.keyCode;
+
+                if (keyCode == 87) {
+
+                    p.rotarDreta();
+
+                } else if (keyCode == 83) {
+
+                    p.moureAvall();
+
+                } else if (keyCode == 68) {
+
+                    p.moureDreta();
+
+                } else if (keyCode == 65) {
+                    p.moureEsquerra();
+
+                }
+            }
+
+            //TIEMPO EN JUEGO Y PUNTUACIÓN
+
+
+            r.puntuacionMaxima = isNaN(parseInt(document.cookie)) ? 0 : parseInt(document.cookie);
+            var total = r.puntuacionMaxima + r.puntuacion;
+            document.cookie = total;
+
+
+            //Generador de piezas
             this.piezaS = r.piezaSiguiente();
 
             var pa = GeneraPecaAleatoria();
-            p = new Pieza(pa[0], pa[1], 0, 4);
+            p = new Pieza(pa[0], pa[1], 2, 4);
             this.piezaActual = p;
 
             var c = false;
+
 
             function reFresh() {
 
                 if (c == false) {
 
                     document.getElementById("demo").innerHTML = this.piezaS.pintar();
-                    
+
                 } else {
                     p = this.piezaS;
                     this.piezaS = r.piezaSiguiente();
                     c = false;
                 }
+
 
                 function pintar2() {
 
@@ -242,43 +303,14 @@ and open the template in the editor.
                                 }
                                 if (r.tablero[i][j] == 2) {
 
-                                    if (p.color == "verde" ) {
-                                        img = document.getElementById("verde");
-                                    } else if (p.color == "lila") {
-                                        img = document.getElementById("lila");
-                                    } else if (p.color == "naranja") {
-                                        img = document.getElementById("naranja");
-                                    } else if (p.color == "gris") {
-                                        img = document.getElementById("gris");
-                                    } else if (p.color == "azul") {
-                                        img = document.getElementById("azul");
-                                    } else if (p.color == "amarillo") {
-                                        img = document.getElementById("amarillo");
-                                    } else if (p.color == "rosa") {
-                                        img = document.getElementById("rosa");
-                                    }
-
+                                    img = document.getElementById(p.color);
                                 }
 
                                 for (var m = 0; m < p.forma.length; m++) {
                                     for (var n = 0; n < p.forma[m].length; n++) {
                                         if (p.x + m == i && p.y + n == j && p.forma[m][n] == 2) {
 
-                                            if (p.color == "verde") {
-                                                img = document.getElementById("verde");
-                                            } else if (p.color == "lila") {
-                                                img = document.getElementById("lila");
-                                            } else if (p.color == "naranja") {
-                                                img = document.getElementById("naranja");
-                                            } else if (p.color == "gris") {
-                                                img = document.getElementById("gris");
-                                            } else if (p.color == "azul") {
-                                                img = document.getElementById("azul");
-                                            } else if (p.color == "amarillo") {
-                                                img = document.getElementById("amarillo");
-                                            } else if (p.color == "rosa") {
-                                                img = document.getElementById("rosa");
-                                            }
+                                            img = document.getElementById(p.color);
 
                                         }
 
@@ -293,6 +325,8 @@ and open the template in the editor.
 
 
                 pintar2();
+                document.getElementById("puntuacion").innerHTML = "PUNTUACIÓN MÁXIMA   : " + r.puntuacionMaxima + "   Puntuación : " + r.puntuacion + "   Nivel : " + r.nivel + "<br>";
+
                 colisionPiezas();
 
                 function colisionPiezas() {
@@ -301,6 +335,7 @@ and open the template in the editor.
                     var ok2 = true;
                     var ok3 = true;
                     var ok4 = true;
+                    var ok5 = true;
 
                     for (var m = 0; m < p.forma.length; m++) {
                         for (var n = 0; n < p.forma[m].length; n++) {
@@ -348,45 +383,68 @@ and open the template in the editor.
                                                     ok4 = false;
                                                 }
                                             }
+
+                                            if (p.forma[m-1][n+1] == 2) {
+
+                                                if (ok4 == true) {
+                                                    if (r.tablero[p.x + m][p.y + n+1] == 0) {
+                                                        ok5 = true;
+
+                                                    } else {
+                                                        ok5 = false;
+                                                    }
+                                                }
+                                            }
+
+
+
+
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
+                        if (ok == true && ok2 == true && ok3 == true && ok4 == true && ok5 == true) {
+                            r.movimientoAutomatico();
+                        } else {
+                            c = true;
+                            r.puntuacion += 10;
+                            r.piezasTotales++;
+                            imprimirPiezasFinalizadas();
+
+                            if (r.piezasTotales == 10 || r.piezasTotales == 20 || r.piezasTotales == 30 || r.piezasTotales == 40 || r.piezasTotales == 50) {
+                                r.nivel++;
+                                r.puntuacion += 20;
+                            }
+                            r.finalizarPartida();
+                        }
                     }
 
-                    if (ok == true && ok2 == true && ok3 == true && ok4 == true) {
-                        r.movimientoAutomatico();
-                    } else {
-                        c = true;
-                        imprimirPiezasFinalizadas();
-                    }
-                }
-
-                function imprimirPiezasFinalizadas() {
-
-                    for (var m = 0; m < p.forma.length; m++) {
-                        for (var n = 0; n < p.forma[m].length; n++) {
-
-                            if (p.forma[m][n] == 2) {
-
-                                r.tablero[p.x + m][p.y + n] = p.forma[m][n];
 
 
+                    function imprimirPiezasFinalizadas() {
+
+                        for (var m = 0; m < p.forma.length; m++) {
+                            for (var n = 0; n < p.forma[m].length; n++) {
+
+                                if (p.forma[m][n] == 2) {
+
+                                    r.tablero[p.x + m][p.y + n] = p.forma[m][n];
+
+                                }
                             }
                         }
                     }
-                  
                 }
 
-            }
-
-
-            var id = setInterval(reFresh, 100);
-
-
+                var id = setInterval(reFresh, 1000);
 
         </script>
 
     </body>
 </html>
+
+
+
