@@ -128,17 +128,17 @@ and open the template in the editor.
                 if (r.tablero[p.x][p.y + 4] == 0) {
                     p.y++;
                     control = false;
-                } else if (p.forma[0][3] == 0 && p.forma[1][3] == 0 && p.forma[2][3] == 0 && p.forma[3][3] == 0 && control == true && p.color!="lila") {
+                } else if (p.forma[0][3] == 0 && p.forma[1][3] == 0 && p.forma[2][3] == 0 && p.forma[3][3] == 0 && control == true && p.color != "lila") {
                     p.y++;
-                        
+
                     if (r.tablero[p.x][p.y + 2] == 1) {
                         p.y--;
                     }
                 }
                 if (p.forma[0][2] == 0 && p.forma[1][2] == 0 && p.forma[2][2] == 0 && p.forma[3][2] == 0 && control == true) {
                     p.y++;
-                    if (r.tablero[p.x][p.y+1] == 1) {
-                       
+                    if (r.tablero[p.x][p.y + 1] == 1) {
+
                         p.y--;
                     }
                 }
@@ -162,9 +162,21 @@ and open the template in the editor.
             };
             Pieza.prototype.moureAvall = function ()
             {
-                if (r.tablero[p.x + 4][p.y] < 2 || r.tablero[p.x + 4][p.y + 1] < 2 || r.tablero[p.x + 4][p.y + 2] < 2 || r.tablero[p.x + 4][p.y + 3] < 2) {
-                    p.x++;
-                    r.puntuacion += 1;
+                r.movimientoAutomatico();
+
+                for (var m = 0; m < p.forma.length; m++) {
+                    for (var n = 0; n < p.forma[m].length; n++) {
+
+                        if (p.forma[m][n] > 3) {
+
+                            if (r.tablero[p.x + m][p.y + n] == 0) {
+
+                            } else {
+
+                             p.x--;
+                            }
+                        }
+                    }
                 }
 
             };
@@ -226,6 +238,37 @@ and open the template in the editor.
                 }
             };
 
+
+            Pieza.prototype.colisionPiezas = function () {
+
+                r.movimientoAutomatico();
+
+                for (var m = 0; m < p.forma.length; m++) {
+                    for (var n = 0; n < p.forma[m].length; n++) {
+
+                        if (p.forma[m][n] > 3) {
+
+                            if (r.tablero[p.x + m][p.y + n] == 0) {
+
+                            } else {
+
+                                p.imprimirPiezasFinalizadas();
+                                c = true;
+                                r.puntuacion += 10;
+                                r.piezasTotales++;
+
+
+                                if (r.piezasTotales == 10 || r.piezasTotales == 20 || r.piezasTotales == 30 || r.piezasTotales == 40 || r.piezasTotales == 50) {
+                                    r.nivel++;
+                                    r.puntuacion += 20;
+                                }
+                                r.finalizarPartida();
+                            }
+                        }
+                    }
+                }
+            }
+
             Pieza.prototype.imprimirPiezasFinalizadas = function () {
 
                 for (var m = 0; m < p.forma.length; m++) {
@@ -233,101 +276,10 @@ and open the template in the editor.
 
                         if (p.forma[m][n] > 3) {
 
-                            r.tablero[p.x + m][p.y + n] = p.forma[m][n];
+                            r.tablero[p.x + m - 1][p.y + n] = p.forma[m][n];
 
                         }
                     }
-                }
-            }
-
-
-            Pieza.prototype.colisionPiezas = function () {
-
-                var ok = true;
-                var ok2 = true;
-                var ok3 = true;
-                var ok4 = true;
-                var ok5 = true;
-
-                for (var m = 0; m < p.forma.length; m++) {
-                    for (var n = 0; n < p.forma[m].length; n++) {
-
-                        if (p.forma[m][n] > 3) {
-
-                            if (r.tablero[p.x + m + 1][p.y + n] == 0) {
-
-                                ok = true;
-
-                            } else {
-                                ok = false;
-
-                            }
-
-                            if (p.forma[m][n - 1] > 3) {
-
-                                if (ok == true) {
-                                    if (r.tablero[p.x + m + 1][p.y + n - 1] == 0) {
-                                        ok2 = true;
-
-                                    } else {
-                                        ok2 = false;
-                                    }
-                                }
-
-                                if (p.forma[m][n - 2] > 3) {
-
-                                    if (ok2 == true) {
-                                        if (r.tablero[p.x + m + 1][p.y + n - 2] == 0) {
-                                            ok3 = true;
-
-                                        } else {
-                                            ok3 = false;
-                                        }
-                                    }
-
-                                    if (p.forma[m][n - 3] > 3) {
-
-                                        if (ok3 == true) {
-                                            if (r.tablero[p.x + m + 1][p.y + n - 3] == 0) {
-                                                ok4 = true;
-
-                                            } else {
-                                                ok4 = false;
-                                            }
-                                        }
-
-                                        if (p.forma[m - 1][n + 1] > 3) {
-
-                                            if (ok4 == true) {
-                                                if (r.tablero[p.x + m][p.y + n + 1] == 0) {
-                                                    ok5 = true;
-
-                                                } else {
-                                                    ok5 = false;
-                                                }
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (ok == true && ok2 == true && ok3 == true && ok4 == true && ok5 == true) {
-                    r.movimientoAutomatico();
-                } else {
-                    c = true;
-                    r.puntuacion += 10;
-                    r.piezasTotales++;
-                    p.imprimirPiezasFinalizadas();
-
-                    if (r.piezasTotales == 10 || r.piezasTotales == 20 || r.piezasTotales == 30 || r.piezasTotales == 40 || r.piezasTotales == 50) {
-                        r.nivel++;
-                        r.puntuacion += 20;
-                    }
-                    r.finalizarPartida();
                 }
             }
 
@@ -379,8 +331,8 @@ and open the template in the editor.
                 if (keyCode == 87) {
 
                     p.rotarDreta();
-                    
-                    
+
+
                 } else if (keyCode == 83) {
 
                     p.moureAvall();
@@ -394,12 +346,6 @@ and open the template in the editor.
 
                 }
             }
-
-            //TIEMPO EN JUEGO Y PUNTUACIÓN
-
-            r.puntuacionMaxima = isNaN(parseInt(document.cookie)) ? 0 : parseInt(document.cookie);
-            var total = r.puntuacionMaxima + r.puntuacion;
-            document.cookie = total;
 
 
             //Generador de piezas
