@@ -12,7 +12,6 @@ and open the template in the editor.
     </head>
     <body>
         <p id="demo"></p>
-
         <p id="puntuacion"></p>
 
         <!-- Imatges que farem servir en el nostre espai de dibuix, estan ocultades -->
@@ -32,6 +31,7 @@ and open the template in the editor.
         <canvas id="espai2" width="120" height="100"> </canvas>
         <script>
 
+
             var ok = true;
 
             var TETRIS = function () {
@@ -44,6 +44,7 @@ and open the template in the editor.
                 this.piezaActual = 0;
                 this.nivel;
                 this.piezasTotales = 0;
+                this.velocidad = 1000;
 
             }
 
@@ -51,7 +52,7 @@ and open the template in the editor.
 
 
                 this.tablero = [
-                    [1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -85,12 +86,14 @@ and open the template in the editor.
 
                 this.piezasTotales = 0;
                 this.nivel = 0;
+                this.velocidad = 1000;
 
             }
-
+            //Inicio el juego tan solo una vez
             var r = new TETRIS();
             r.iniciarJuego();
 
+            //Genera la pieza siguiente substituyendo la p por la pieza siguiente.
             TETRIS.prototype.piezaSiguiente = function () {
 
                 var pa = GeneraPecaAleatoria();
@@ -98,18 +101,72 @@ and open the template in the editor.
                 return a;
 
             }
+
+            //Botones por teclado(W(rotar derecha),F(rotar izquierda)A,D,S. 
             TETRIS.prototype.teclado = function () {
+
+                document.addEventListener("keydown", keyDownTextField, false);
+                function keyDownTextField(e) {
+                    var keyCode = e.keyCode;
+
+                    if (keyCode == 87) {
+
+                        p.rotarDreta();
+
+
+                    } else if (keyCode == 83) {
+
+                        p.moureAvall();
+
+                    } else if (keyCode == 68) {
+
+                        p.moureDreta();
+
+                    } else if (keyCode == 65) {
+                        //W
+                        p.moureEsquerra();
+
+                    } else if (keyCode == 70) {
+                        // F
+                        p.rotarEsquerra()();
+
+                    }
+                }
 
             }
             TETRIS.prototype.movimientoAutomatico = function () {
                 p.x++;
             }
             TETRIS.prototype.finalizarPartida = function () {
-                if (r.tablero[p.x - 2][p.y] == 3) {
 
-                    r.puntuacionMaxima = document.cookie;
+                if (r.tablero[p.x - 3][p.y] == 3) {
+
                     alert("GAMER OVER");
                     clearInterval(id);
+                }
+            }
+
+       // En el caso de que la fila sea diferente a 0 esta completa y substituimos las lineas.
+            TETRIS.prototype.destruirFila = function () {
+
+                var n = 1;
+                for (var m = 1; m < 27; m++) {
+
+                    if (r.tablero[m][n] != 0 && r.tablero[m][n + 1] != 0 && r.tablero[m][n + 2] != 0 && r.tablero[m][n + 3] != 0
+                            && r.tablero[m][n + 4] != 0 && r.tablero[m][n + 5] != 0 && r.tablero[m][n + 6] != 0 && r.tablero[m][n + 7] != 0
+                            && r.tablero[m][n + 8] != 0 && r.tablero[m][n + 9] != 0 && r.tablero[m][n + 10] != 0) {
+
+                        r.tablero[m] = r.tablero[m - 1];
+
+
+                        for (var menosFila = 1; menosFila < 24; menosFila++) {
+
+                            r.tablero[m - menosFila] = r.tablero[m - (menosFila + 1)];
+                            r.tablero[0] = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
+
+                        }
+                    }
+
                 }
             }
 
@@ -120,7 +177,8 @@ and open the template in the editor.
                 this.x = x;
                 this.y = y;
             };
-
+            
+      //Movemos la pieza si no es posible comprobamos los espacios en blanco de la matriz de pieza para moverlo o no.
             Pieza.prototype.moureDreta = function ()
             {
                 var control = true;
@@ -144,6 +202,7 @@ and open the template in the editor.
                 }
 
             };
+            //Movemos la pieza si no es posible comprobamos los espacios en blanco de la matriz de pieza para moverlo o no.
             Pieza.prototype.moureEsquerra = function ()
             {
                 var control = true;
@@ -160,9 +219,11 @@ and open the template in the editor.
                 }
 
             };
+            //Movemos abajo si la pieza se situa sobre una posicion ocupada movemos la pieza hacia atrás.
             Pieza.prototype.moureAvall = function ()
             {
                 r.movimientoAutomatico();
+                r.puntuacion += 5;
 
                 for (var m = 0; m < p.forma.length; m++) {
                     for (var n = 0; n < p.forma[m].length; n++) {
@@ -173,7 +234,7 @@ and open the template in the editor.
 
                             } else {
 
-                             p.x--;
+                                p.x--;
                             }
                         }
                     }
@@ -198,7 +259,8 @@ and open the template in the editor.
                 p.rotarDreta();
             }
 
-            Pieza.prototype.pintar = function ()
+         //Pintamos la pieza dependiendo del número de la ficha.
+            Pieza.prototype.pintarPieza = function ()
             {
 
                 var canvas2 = document.getElementById("espai2");
@@ -238,7 +300,8 @@ and open the template in the editor.
                 }
             };
 
-
+    //Movemos la pieza si esta casilla esta ocupada la movemos hacia atrás en la función imprimirPiezaFInalizada.
+    //Aumentamos la puntuacion , nivel y disminuimos la velocidad.
             Pieza.prototype.colisionPiezas = function () {
 
                 r.movimientoAutomatico();
@@ -248,14 +311,14 @@ and open the template in the editor.
 
                         if (p.forma[m][n] > 3) {
 
-                            if (r.tablero[p.x + m][p.y + n] == 0) {
-
-                            } else {
+                            if (r.tablero[p.x + m][p.y + n] != 0) {
 
                                 p.imprimirPiezasFinalizadas();
                                 c = true;
                                 r.puntuacion += 10;
                                 r.piezasTotales++;
+                                var disminuirVelocidad= r.velocidad*10/100;
+                                r.velocidad=r.velocidad-disminuirVelocidad;
 
 
                                 if (r.piezasTotales == 10 || r.piezasTotales == 20 || r.piezasTotales == 30 || r.piezasTotales == 40 || r.piezasTotales == 50) {
@@ -268,7 +331,7 @@ and open the template in the editor.
                     }
                 }
             }
-
+         //Imprimimos la forma de la pieza en el tablero
             Pieza.prototype.imprimirPiezasFinalizadas = function () {
 
                 for (var m = 0; m < p.forma.length; m++) {
@@ -324,29 +387,8 @@ and open the template in the editor.
                 return peces[numeroAleatori];
             }
 
-            document.addEventListener("keydown", keyDownTextField, false);
-            function keyDownTextField(e) {
-                var keyCode = e.keyCode;
-
-                if (keyCode == 87) {
-
-                    p.rotarDreta();
-
-
-                } else if (keyCode == 83) {
-
-                    p.moureAvall();
-
-                } else if (keyCode == 68) {
-
-                    p.moureDreta();
-
-                } else if (keyCode == 65) {
-                    p.moureEsquerra();
-
-                }
-            }
-
+           //Llamamos teclas
+            r.teclado();
 
             //Generador de piezas
             this.piezaS = r.piezaSiguiente();
@@ -359,10 +401,11 @@ and open the template in the editor.
 
 
             function reFresh() {
-
+                
+        //Imprimimos la siguiente pieza y en el caso de que una pieza finalice este valor será el nuevo valor de p
                 if (c == false) {
 
-                    this.piezaS.pintar();
+                    this.piezaS.pintarPieza();
 
                 } else {
                     p = this.piezaS;
@@ -372,7 +415,7 @@ and open the template in the editor.
 
 
 
-                function pintar2() {
+                function pintarTablero() {
 
                     var canvas = document.getElementById("espai");
                     var ctx = canvas.getContext("2d");
@@ -430,15 +473,14 @@ and open the template in the editor.
 
 
                 document.getElementById("puntuacion").innerHTML = "Puntuación : " + r.puntuacion + "   Nivel : " + r.nivel + "<br>";
-                pintar2();
+                pintarTablero();
                 p.colisionPiezas();
-
-
+                r.destruirFila();
 
 
             }
 
-            var id = setInterval(reFresh, 1000);
+            var id = setInterval(reFresh, r.velocidad);
 
         </script>
 
