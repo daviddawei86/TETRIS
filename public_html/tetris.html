@@ -11,7 +11,7 @@ and open the template in the editor.
 
     </head>
     <body>
-        <p id="demo"></p>
+        
         <p id="puntuacion"></p>
 
         <!-- Imatges que farem servir en el nostre espai de dibuix, estan ocultades -->
@@ -42,7 +42,7 @@ and open the template in the editor.
                 this.puntuacion = 0;
                 this.puntuacionMaxima = 0;
                 this.piezaActual = 0;
-                this.nivel;
+                this.nivel=0;
                 this.piezasTotales = 0;
                 this.velocidad = 1000;
 
@@ -97,7 +97,7 @@ and open the template in the editor.
             TETRIS.prototype.piezaSiguiente = function () {
 
                 var pa = GeneraPecaAleatoria();
-                var a = new Pieza(pa[0], pa[1], 2, 4);
+                var a = new Pieza(pa[0], pa[1], 1, 4);
                 return a;
 
             }
@@ -110,9 +110,8 @@ and open the template in the editor.
                     var keyCode = e.keyCode;
 
                     if (keyCode == 87) {
-
+                        
                         p.rotarDreta();
-
 
                     } else if (keyCode == 83) {
 
@@ -321,9 +320,16 @@ and open the template in the editor.
                                 r.velocidad=r.velocidad-disminuirVelocidad;
 
 
-                                if (r.piezasTotales == 10 || r.piezasTotales == 20 || r.piezasTotales == 30 || r.piezasTotales == 40 || r.piezasTotales == 50) {
+                                if (r.piezasTotales == 10 || r.piezasTotales == 20 || r.piezasTotales == 30 || 
+                                        r.piezasTotales == 40 || r.piezasTotales == 50 || r.piezasTotales == 60 
+                                        || r.piezasTotales == 70 || r.piezasTotales == 80 ||  r.piezasTotales == 90 ||  r.piezasTotales == 100) {
                                     r.nivel++;
                                     r.puntuacion += 20;
+                                    
+                                    if(r.nivel==10){
+                                        alert("Ganaste");
+                                         clearInterval(id);
+                                    }
                                 }
                                 r.finalizarPartida();
                             }
@@ -390,11 +396,11 @@ and open the template in the editor.
            //Llamamos teclas
             r.teclado();
 
-            //Generador de piezas
+            //Generamos la primera pieza , las siguientes serán creadas en la funcion piezaSiguiente.
             this.piezaS = r.piezaSiguiente();
-
+            
             var pa = GeneraPecaAleatoria();
-            p = new Pieza(pa[0], pa[1], 2, 4);
+            p = new Pieza(pa[0], pa[1], 1, 4);
             this.piezaActual = p;
 
             var c = false;
@@ -470,8 +476,8 @@ and open the template in the editor.
                     }
                 }
 
-
-
+             
+               //Puntuación y llamamos funciones
                 document.getElementById("puntuacion").innerHTML = "Puntuación : " + r.puntuacion + "   Nivel : " + r.nivel + "<br>";
                 pintarTablero();
                 p.colisionPiezas();
